@@ -28,10 +28,20 @@ const Detail = () => {
           </div>
           <div className="photos">
             <div className="photoItem">
-              <img src="avetar.png" alt="" />
-              <span>photo_2024.png</span>
-              <img src="./download.png" alt="" />
+              <div className="photoDetail">
+                <img src="avatar.png" alt="" />
+                <span>photo_2024.png</span>
+              </div>
+              <img src="./download.png" alt="" className="icon"/>
             </div>
+            <div className="photoItem">
+              <div className="photoDetail">
+                <img src="avatar.png" alt="" />
+                <span>photo_2024.png</span>
+              </div>
+              <img src="./download.png" alt="" className="icon"/>
+            </div>
+            
           </div>
         </div>
         <div className="option">
@@ -41,6 +51,7 @@ const Detail = () => {
           </div>
         </div>
         <button>Block User</button>
+        <button className="logout">Logout</button>
       </div>
 
     </div>

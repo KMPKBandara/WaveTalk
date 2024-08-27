@@ -19,10 +19,7 @@ const Login = () => {
 
     const handleLogin = e =>{
         e.preventDefault()
-<<<<<<< HEAD
         toast.warn("Hello")
-=======
->>>>>>> 75a9489f9808b5f1dc2a40eb0275780916a33903
     }
 
   return (

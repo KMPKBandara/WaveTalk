@@ -58,7 +58,7 @@ const Login = () => {
         }
     };
 
-    const handleLogin = (e) => {
+    const handleLogin = async(e) => {
         e.preventDefault();
         setLoading(true);
 
@@ -67,7 +67,7 @@ const Login = () => {
         const {email, password} = Object.fromEntries(formData);
 
         try {
-            
+            await signInWithEmailAndPassword(auth,email,password);
         } catch (err) {
             console.log(err);
             toast.error(err.message);

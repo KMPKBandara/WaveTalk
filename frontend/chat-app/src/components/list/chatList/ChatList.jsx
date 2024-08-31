@@ -53,9 +53,9 @@ const ChatList = () => {
 
       {chats.map((Chat) => (
       <div className="item" key={Chat.chatId}>
-        <img src="./avatar.png" alt="" />
+        <img src={Chat.user.avatar || "./avatar.png"} alt="" />
         <div className="texts">
-          <span>Jane Doe</span>
+          <span>{Chat.user.username}</span>
           <p>{Chat.lastMessage}</p>
         </div>
       </div>

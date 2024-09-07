@@ -9,6 +9,7 @@ import { useChatStore } from "../../lib/chatStore";
 const ChatList = () => {
   const[chats,setChats]= useState([]);
   const[addMode,setAddMode]= useState(false);
+  const[input,setInput]= useState("");
 
   const {currentUser} = useUserStore();
   const {chatId,changeChat} = useChatStore();
@@ -42,7 +43,7 @@ const ChatList = () => {
   const handleSelect = async (Chat)=>{
   
     const userChats = chats.map((item) => {
-      const {user, ...rest} = item;
+      const {user, ...rest} = item;     
       return rest;
     });
 
@@ -63,13 +64,17 @@ const ChatList = () => {
       console.log(err);
     }
   };
+
+  const filteredChats = chats.filter((c) =>
+    c.user.username.toLowerCase().includes(input.toLowerCase())
+);
   
   return (
     <div className='chatList'>
       <div className="search">
         <div className="searchBar">
           <img src='./search.png' alt=''/>
-          <input type="text" placeholder='Search'/>
+          <input type="text" placeholder='Search' onChange={(e)=>setInput(e.target.value)}/>
         </div>
         <img 
           src={addMode ? "./minus.png" : "./plus.png"}
@@ -78,15 +83,15 @@ const ChatList = () => {
           />
       </div>
 
-      {chats.map((Chat) => (
+      {filteredChats.map((Chat) => (
       <div className="item" key={Chat.chatId} onClick={()=>handleSelect(Chat)}
       style={{
         backgroundColor: Chat?.isSeen ? "transparent" : "#5183fe",
       }}
       >
-        <img src={Chat.user.avatar || "./avatar.png"} alt="" />
+        <img src={Chat.user.blocked.includes(currentUser.id) ? "./avatar.png" : Chat.user.avatar || "./avatar.png"} alt="" />
         <div className="texts">
-          <span>{Chat.user.username}</span>
+          <span>{Chat.user.blocked.includes(currentUser.id) ? "user" : Chat.user.username}</span>
           <p>{Chat.lastMessage}</p>
         </div>
       </div>

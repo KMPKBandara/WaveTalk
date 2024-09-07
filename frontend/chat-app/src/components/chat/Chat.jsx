@@ -157,7 +157,7 @@ setText("");
           <img src="./mic.png" alt="" />
         </div>
         <input type="text" 
-        placeholder="Type a message..." 
+        placeholder={isCurrntUserBlocked || isReceiverBlocked ? "You can't send messages" : "Type a message..." }
         value={text}
         onChange={(e) => setText(e.target.value)}
         disabled={isCurrntUserBlocked || isReceiverBlocked}/>

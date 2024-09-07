@@ -5,17 +5,22 @@ import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from "firebase/firesto
 import { db } from "../lib/firebase";
 import { useChatStore } from "../lib/chatStore";
 import { useUserStore } from "../lib/userStore";
+import upload from "../lib/upload";
 
 const Chat = () => {
   const[chat, setChat] = useState();
   const[open, setOpen] = useState(false);
   const[text, setText] = useState("");
+  const[img, setImg] = useState({
+    file:null,
+    url:"",
+  });
 
   const {currentUser} = useUserStore();
   const {chatId,user} = useChatStore();
 
 
-  const endRef = useRef(null)
+  const endRef = useRef(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({behavior:"smooth"});
@@ -36,15 +41,32 @@ const Chat = () => {
     setOpen(false);
   };
 
+  const handleImg = (e) =>{
+    if(e.target.files[0]){
+    setImg({
+        file:e.target.files[0],
+        url: URL.createObjectURL(e.target.files[0]),
+    });
+}
+};
+
 const handleSend = async ()=>{
   if(text === "") return;
 
+  let imgUrl = null;
+
 try {
+
+if (img.file){
+  imgUrl = await upload(img.file);
+}
+
   await updateDoc(doc(db,"chats", chatId),{
     messages: arrayUnion({
       senderId: currentUser.id,
       text,
       createdAt: new Date(),
+      ...(imgUrl && {img: imgUrl}),
     }),
   });
 
@@ -68,12 +90,19 @@ try {
     await updateDoc(userChatsRef,{
       chats: userChatsData.chats,
     });
-
   }
 });
 } catch (err) {
   console.log(err);
 }
+
+setImg({
+  file: null,
+  url:"",
+});
+
+setText("");
+
 };
 
   return (
@@ -108,15 +137,22 @@ try {
             </div>
             </div>
         ))}
+        {img.url && (<div className="message own">
+          <div className="texts">
+          <img src={img.url} alt="" />
+        </div>
+        </div>
+        )}
+
         <div ref={endRef}></div>
 
       </div>
-
-      
-
       <div className="bottom">
         <div className="icons">
+          <label htmlFor="file">
           <img src="./img.png" alt="" />
+          </label>
+          <input type="file" id="file" style={{display:"none"}} onChange={handleImg}/>
           <img src="./camera.png" alt="" />
           <img src="./mic.png" alt="" />
         </div>

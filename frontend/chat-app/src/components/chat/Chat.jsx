@@ -17,7 +17,7 @@ const Chat = () => {
   });
 
   const {currentUser} = useUserStore();
-  const {chatId,user} = useChatStore();
+  const {chatId,user,isCurrntUserBlocked,isReceiverBlocked} = useChatStore();
 
 
   const endRef = useRef(null);
@@ -109,9 +109,9 @@ setText("");
     <div className='chat'>
       <div className="top">
         <div className="user">
-          <img src="./avatar.png" alt=""/>
+          <img src={user?.avatar || "./avatar.png"} alt=""/>
           <div className="texts">
-            <span>Jane Doe</span>
+            <span>{user?.username}</span>
             <p>Lorem ipsum dolor sit amet.</p>
           </div>
         </div>
@@ -124,7 +124,7 @@ setText("");
 
       <div className="center">
         {chat?.messages?.map((message) => (
-          <div className="message own" key={message?.createdAt}>
+          <div className={message.senderId === currentUser?.id ? "message own" : "message"} key={message?.createdAt}>
             <div className="texts">
               {message.img && <img
               src={message.img}
@@ -157,9 +157,10 @@ setText("");
           <img src="./mic.png" alt="" />
         </div>
         <input type="text" 
-        placeholder="Type a message" 
+        placeholder={isCurrntUserBlocked || isReceiverBlocked ? "You can't send messages" : "Type a message..." }
         value={text}
-        onChange={(e) => setText(e.target.value)}/>
+        onChange={(e) => setText(e.target.value)}
+        disabled={isCurrntUserBlocked || isReceiverBlocked}/>
         
         <div className="emoji">
           <img src="./emoji.png" 
@@ -170,7 +171,7 @@ setText("");
           </div>
           
         </div>
-        <button className="sendButton" onClick={handleSend}>Send</button>
+        <button className="sendButton" onClick={handleSend} disabled={isCurrntUserBlocked || isReceiverBlocked}>Send</button>
       </div>
     </div>
   );

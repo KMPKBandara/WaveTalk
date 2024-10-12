@@ -137,6 +137,17 @@ const Chat = () => {
     setIsCameraOpen(false); // Close camera after taking picture
   };
 
+  const cancelPicture = () => {
+    // Stop the camera and clear any captured image data
+    const stream = videoRef.current.srcObject;
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach((track) => track.stop());
+    }
+    setIsCameraOpen(false); // Close camera
+    setImg({ file: null, url: "" }); // Clear captured image data
+  };
+
   return (
     <div className='chat'>
       <div className="top">
@@ -177,6 +188,7 @@ const Chat = () => {
         <div className="camera">
           <video ref={videoRef} style={{ width: '100%', height: 'auto' }} />
           <button onClick={takePicture}>Take Picture</button>
+          <button onClick={cancelPicture}>Cancel</button> {/* Cancel button */}
         </div>
       )}
 

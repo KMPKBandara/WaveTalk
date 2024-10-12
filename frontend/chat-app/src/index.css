@@ -6,7 +6,7 @@
 }
 
 body{
-  background-image: url("/public/bg.jpg");
+  background-image: url("/public/bg.jpeg");
   display: flex;
   align-items: center;
   justify-content: center;

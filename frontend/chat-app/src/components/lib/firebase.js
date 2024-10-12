@@ -6,12 +6,12 @@ import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
-  authDomain: "wavetalk-30a02.firebaseapp.com",
-  projectId: "wavetalk-30a02",
-  storageBucket: "wavetalk-30a02.appspot.com",
-  messagingSenderId: "426479814843",
-  appId: "1:426479814843:web:d81346ddc6f24693d6c19e",
-  measurementId: "G-6WPYLFVNMR"
+  authDomain: "chatt-6c943.firebaseapp.com",
+  projectId: "chatt-6c943",
+  storageBucket: "chatt-6c943.appspot.com",
+  messagingSenderId: "339382732146",
+  appId: "1:339382732146:web:d83e20f41decec2b69c9eb",
+  measurementId: "G-C0P7ETCTFC"
 };
 
 const app = initializeApp(firebaseConfig);

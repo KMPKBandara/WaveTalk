@@ -16,6 +16,7 @@ const Chat = () => {
     url: "",
   });
   const [isCameraOpen, setIsCameraOpen] = useState(false); // Track camera state
+  const [isListening, setIsListening] = useState(false); // Track mic state
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -148,6 +149,34 @@ const Chat = () => {
     setImg({ file: null, url: "" }); // Clear captured image data
   };
 
+  const openMic = () => {
+    setIsListening(true); // Set mic state to listening
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    const recognition = new window.SpeechRecognition();
+    recognition.interimResults = true;
+
+    recognition.addEventListener("result", (e) => {
+      const transcript = Array.from(e.results)
+        .map((result) => result[0])
+        .map((result) => result.transcript)
+        .join(" ");
+
+      // Set the transcript as the chat message and send it directly
+      setText(transcript);
+
+      if (e.results[0].isFinal) {
+        handleSend(); // Send the message immediately once speech recognition is done
+      }
+    });
+
+    recognition.addEventListener("end", () => {
+      setIsListening(false); 
+    });
+
+    recognition.start();
+  };
+
   return (
     <div className='chat'>
       <div className="top">
@@ -199,7 +228,7 @@ const Chat = () => {
           </label>
           <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
           <img src="./camera.png" alt="" onClick={openCamera} /> {/* Open camera */}
-          <img src="./mic.png" alt="" />
+          <img src="./mic.png" alt="" onClick={openMic} /> {/*Mic On*/}
         </div>
         <input
           type="text"
@@ -214,7 +243,9 @@ const Chat = () => {
             <EmojiPicker open={open} onEmojiClick={handleEmoji} />
           </div>
         </div>
-        <button className="sendButton" onClick={handleSend} disabled={isCurrntUserBlocked || isReceiverBlocked}>Send</button>
+        <button className="sendButton" onClick={handleSend} disabled={isCurrntUserBlocked || isReceiverBlocked}>
+          Send
+        </button>
       </div>
       <canvas ref={canvasRef} style={{ display: 'none' }} /> {/* Hidden canvas for image capturing */}
     </div>

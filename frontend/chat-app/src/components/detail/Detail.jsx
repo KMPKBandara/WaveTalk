@@ -37,13 +37,13 @@ const handleBlock = async ()=>{
         <div className="option">
           <div className="title">
             <span>Chat Settings</span>
-            <img src="./arrowUp.png" alt="" />
+            <img src="./arrowDown.png" alt="" />
           </div>
         </div>
         <div className="option">
           <div className="title">
             <span>Privacy & Help</span>
-            <img src="./arrowUp.png" alt="" />
+            <img src="./arrowDown.png" alt="" />
           </div>
         </div>
         <div className="option">
@@ -72,7 +72,7 @@ const handleBlock = async ()=>{
         <div className="option">
           <div className="title">
             <span>Shared Files</span>
-            <img src="./arrowUp.png" alt="" />
+            <img src="./arrowDown.png" alt="" />
           </div>
         </div>
         <button onClick={handleBlock}>{

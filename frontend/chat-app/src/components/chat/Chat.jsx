@@ -216,8 +216,39 @@ const Chat = () => {
       {isCameraOpen && (
         <div className="camera">
           <video ref={videoRef} style={{ width: '100%', height: 'auto' }} />
-          <button onClick={takePicture}>Take Picture</button>
-          <button onClick={cancelPicture}>Cancel</button> {/* Cancel button */}
+          <button 
+  onClick={takePicture} 
+  style={{
+    backgroundColor: 'blue', 
+    color: 'white', 
+    padding: '10px 20px', 
+    border: 'none', 
+    cursor: 'pointer', 
+    marginRight: '20px',
+    transition: 'background-color 0.3s ease'
+  }}
+  onMouseDown={(e) => e.target.style.backgroundColor = 'lightblue'}
+  onMouseUp={(e) => e.target.style.backgroundColor = 'blue'}
+>
+  Take Picture
+</button>
+
+<button 
+  onClick={cancelPicture} 
+  style={{
+    backgroundColor: 'blue', 
+    color: 'white', 
+    padding: '10px 20px', 
+    border: 'none', 
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease'
+  }}
+  onMouseDown={(e) => e.target.style.backgroundColor = 'lightblue'}
+  onMouseUp={(e) => e.target.style.backgroundColor = 'blue'}
+>
+  Cancel
+</button>
+ {/* Cancel button */}
         </div>
       )}
 

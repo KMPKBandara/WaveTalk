@@ -188,9 +188,9 @@ const Chat = () => {
           </div>
         </div>
         <div className="icons">
-          <img src="./phone.png" alt="" />
-          <img src="./video.png" alt="" />
-          <img src="./info.png" alt="" />
+          <img src="./phone.png" alt="" title="call" />
+          <img src="./video.png" alt="" title="video call"/>
+          <img src="./info.png" alt="" title="more details" />
         </div>
       </div>
 
@@ -255,11 +255,23 @@ const Chat = () => {
       <div className="bottom">
         <div className="icons">
           <label htmlFor="file">
-            <img src="./img.png" alt="" />
+            <img src="./img.png" alt="" title="open files" />
           </label>
           <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
-          <img src="./camera.png" alt="" onClick={openCamera} /> {/* Open camera */}
-          <img src="./mic.png" alt="" onClick={openMic} /> {/*Mic On*/}
+          <img 
+  src="./camera.png" 
+  alt="camera" 
+  onClick={openCamera} 
+  title="open camera" // Tooltip for camera
+/>
+
+<img 
+  src="./mic.png" 
+  alt="microphone" 
+  onClick={openMic} 
+  title="open mic" // Tooltip for microphone
+/>
+ {/*Mic On*/}
         </div>
         <input
           type="text"
@@ -269,7 +281,7 @@ const Chat = () => {
           disabled={isCurrntUserBlocked || isReceiverBlocked}
         />
         <div className="emoji">
-          <img src="./emoji.png" alt="" onClick={() => setOpen((prev) => !prev)} />
+          <img src="./emoji.png" alt="" title="send emoji" onClick={() => setOpen((prev) => !prev)} />
           <div className="picker">
             <EmojiPicker open={open} onEmojiClick={handleEmoji} />
           </div>

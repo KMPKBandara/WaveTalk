@@ -17,6 +17,7 @@ const Chat = () => {
   });
   const [isCameraOpen, setIsCameraOpen] = useState(false); // Track camera state
   const [isListening, setIsListening] = useState(false); // Track mic state
+  const [otherUser, setOtherUser] = useState(null); // State for storing other user details
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -29,6 +30,7 @@ const Chat = () => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+  // Fetch the chat data
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
       setChat(res.data());
@@ -38,6 +40,21 @@ const Chat = () => {
       unSub();
     };
   }, [chatId]);
+
+  // Fetch the other user's details
+  useEffect(() => {
+    const fetchOtherUser = async () => {
+      if (user) {
+        const userDocRef = doc(db, "users", user.id);  // Fetch the other user's document by their ID
+        const userSnapshot = await getDoc(userDocRef);
+        if (userSnapshot.exists()) {
+          setOtherUser(userSnapshot.data());  // Set the other user's data to state
+        }
+      }
+    };
+
+    fetchOtherUser();
+  }, [user]);
 
   const handleEmoji = (e) => {
     setText((prev) => prev + e.emoji);
@@ -184,7 +201,7 @@ const Chat = () => {
           <img src={user?.avatar || "./avatar.png"} alt="" />
           <div className="texts">
             <span>{user?.username}</span>
-            <p>Lorem ipsum dolor sit amet.</p>
+            <p>{otherUser?.about || "No about details provided."}</p> {/* Show other user's about details */}
           </div>
         </div>
         <div className="icons">
@@ -217,80 +234,90 @@ const Chat = () => {
         <div className="camera">
           <video ref={videoRef} style={{ width: '100%', height: 'auto' }} />
           <button 
-  onClick={takePicture} 
-  style={{
-    backgroundColor: 'blue', 
-    color: 'white', 
-    padding: '10px 20px', 
-    border: 'none', 
-    cursor: 'pointer', 
-    marginRight: '20px',
-    transition: 'background-color 0.3s ease'
-  }}
-  onMouseDown={(e) => e.target.style.backgroundColor = 'lightblue'}
-  onMouseUp={(e) => e.target.style.backgroundColor = 'blue'}
->
-  Take Picture
-</button>
+            onClick={takePicture} 
+            style={{
+              backgroundColor: 'blue', 
+              color: 'white', 
+              padding: '10px 20px', 
+              border: 'none', 
+              cursor: 'pointer', 
+              marginRight: '20px',
+              transition: 'background-color 0.3s ease'
+            }}
+            onMouseDown={(e) => e.target.style.backgroundColor = 'lightblue'}
+            onMouseUp={(e) => e.target.style.backgroundColor = 'blue'}
+          >
+            Take Picture
+          </button>
 
-<button 
-  onClick={cancelPicture} 
-  style={{
-    backgroundColor: 'blue', 
-    color: 'white', 
-    padding: '10px 20px', 
-    border: 'none', 
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease'
-  }}
-  onMouseDown={(e) => e.target.style.backgroundColor = 'lightblue'}
-  onMouseUp={(e) => e.target.style.backgroundColor = 'blue'}
->
-  Cancel
-</button>
- {/* Cancel button */}
+          <button 
+            onClick={cancelPicture} 
+            style={{
+              backgroundColor: 'blue', 
+              color: 'white', 
+              padding: '10px 20px', 
+              border: 'none', 
+              cursor: 'pointer', 
+              marginRight: '20px',
+              transition: 'background-color 0.3s ease'
+            }}
+            onMouseDown={(e) => e.target.style.backgroundColor = 'lightblue'}
+            onMouseUp={(e) => e.target.style.backgroundColor = 'blue'}
+          >
+            Cancel
+          </button>
         </div>
       )}
 
-      <div className="bottom">
-        <div className="icons">
-          <label htmlFor="file">
-            <img src="./img.png" alt="" title="open files" />
-          </label>
-          <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
-          <img 
-  src="./camera.png" 
-  alt="camera" 
-  onClick={openCamera} 
-  title="open camera" // Tooltip for camera
-/>
+<div className="bottom">
+  <div className="icons">
+    <label htmlFor="file">
+      <img src="./img.png" alt="" title="open files" />
+    </label>
+    <input type="file" id="file" style={{ display: "none" }} onChange={handleImg} />
+    
+    <img 
+      src="./camera.png" 
+      alt="camera" 
+      onClick={openCamera} 
+      title="open camera" 
+    />
+    
+    <img 
+      src="./mic.png" 
+      alt="microphone" 
+      onClick={openMic} 
+      title="open mic" 
+    />
+  </div>
 
-<img 
-  src="./mic.png" 
-  alt="microphone" 
-  onClick={openMic} 
-  title="open mic" // Tooltip for microphone
-/>
- {/*Mic On*/}
-        </div>
-        <input
-          type="text"
-          placeholder={isCurrntUserBlocked || isReceiverBlocked ? "You can't send messages" : "Type a message..."}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          disabled={isCurrntUserBlocked || isReceiverBlocked}
-        />
-        <div className="emoji">
-          <img src="./emoji.png" alt="" title="send emoji" onClick={() => setOpen((prev) => !prev)} />
-          <div className="picker">
-            <EmojiPicker open={open} onEmojiClick={handleEmoji} />
-          </div>
-        </div>
-        <button className="sendButton" onClick={handleSend} disabled={isCurrntUserBlocked || isReceiverBlocked}>
-          Send
-        </button>
+  <input
+    type="text"
+    placeholder={isCurrntUserBlocked || isReceiverBlocked ? "You can't send messages" : "Type a message..."}
+    value={text}
+    onChange={(e) => setText(e.target.value)}
+    disabled={isCurrntUserBlocked || isReceiverBlocked}
+  />
+
+  <div className="emoji">
+    <img 
+      src="./emoji.png" 
+      alt="send emoji" 
+      onClick={() => setOpen((prev) => !prev)} 
+      title="send emoji" 
+    />
+    {open && (
+      <div className="picker">
+        <EmojiPicker open={open} onEmojiClick={handleEmoji} />
       </div>
-      <canvas ref={canvasRef} style={{ display: 'none' }} /> {/* Hidden canvas for image capturing */}
+    )}
+  </div>
+
+  <button className="sendButton" onClick={handleSend} disabled={isCurrntUserBlocked || isReceiverBlocked}>
+    Send
+  </button>
+</div>
+
     </div>
   );
 };

@@ -88,7 +88,7 @@ const Detail = () => {
 
         {/* Block/Unblock user functionality */}
         <button onClick={handleBlock}>{
-          isCurrntUserBlocked ? "You are Blocked!" : isReceiverBlocked ? "User blocked." : "Block User"
+          isCurrntUserBlocked ? "You are Blocked!" : isReceiverBlocked ? "Unblock User" : "Block User"
         }</button>
 
         {/* Logout button */}

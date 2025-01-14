@@ -8,8 +8,8 @@ import upload from '../lib/upload';
 
 const Login = () => {
     const [avatar, setAvatar] = useState({
-        file: null,
-        url: ""
+        file: null, // Holds the selected avatar file
+        url: ""  // URL for previewing the selected image
     });
 
     const [loginLoading, setLoginLoading] = useState(false);  // Separate loading state for login

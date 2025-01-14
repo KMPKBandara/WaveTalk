@@ -14,9 +14,11 @@ const firebaseConfig = {
   measurementId: "G-C0P7ETCTFC"
 };
 
+// Initialize Firebase with the provided configuration
 const app = initializeApp(firebaseConfig);
+// Initialize Firebase Analytics service for tracking user behavior and metrics
 const analytics = getAnalytics(app);
 
-export const auth = getAuth()
-export const db = getFirestore()
-export const storage = getStorage()
+export const auth = getAuth() // Firebase Authentication
+export const db = getFirestore() // Firestore database
+export const storage = getStorage() // Firebase Storage for file uploads

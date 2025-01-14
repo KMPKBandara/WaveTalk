@@ -1,5 +1,5 @@
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css'; // Importing the default styling for toast notifications
 
 const Notification = () => {
   return (
@@ -9,4 +9,4 @@ const Notification = () => {
   )
 }
 
-export default Notification
+export default Notification // Exporting the Notification component for use in other parts of the application

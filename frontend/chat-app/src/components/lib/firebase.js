@@ -1,3 +1,4 @@
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
@@ -6,19 +7,19 @@ import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
-  authDomain: "chatt-6c943.firebaseapp.com",
-  projectId: "chatt-6c943",
-  storageBucket: "chatt-6c943.appspot.com",
-  messagingSenderId: "339382732146",
-  appId: "1:339382732146:web:d83e20f41decec2b69c9eb",
-  measurementId: "G-C0P7ETCTFC"
+  authDomain: "medexplorer-10c83.firebaseapp.com",
+  databaseURL: "https://medexplorer-10c83-default-rtdb.firebaseio.com",
+  projectId: "medexplorer-10c83",
+  storageBucket: "medexplorer-10c83.appspot.com",
+  messagingSenderId: "753080716791",
+  appId: "1:753080716791:web:4f4950b3765851afb232f2",
+  measurementId: "G-XKDDHGGFHE"
 };
 
-// Initialize Firebase with the provided configuration
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// Initialize Firebase Analytics service for tracking user behavior and metrics
 const analytics = getAnalytics(app);
 
-export const auth = getAuth() // Firebase Authentication
-export const db = getFirestore() // Firestore database
-export const storage = getStorage() // Firebase Storage for file uploads
+export const auth = getAuth()
+export const db = getFirestore()
+export const storage = getStorage()

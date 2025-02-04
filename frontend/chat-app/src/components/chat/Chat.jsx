@@ -18,7 +18,7 @@ const Chat = () => {
   });
   const [isCameraOpen, setIsCameraOpen] = useState(false); // Track camera state
   const [isListening, setIsListening] = useState(false); // Track mic state
-  const [otherUser, setOtherUser] = useState(null); // State for storing other user details
+  const [otherUser, setOtherUser] = useState(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 

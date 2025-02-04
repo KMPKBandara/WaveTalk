@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import './chatlist.css';
+import "./chatlist.css";
 import AddUser from "./addUser/addUser";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
@@ -12,101 +12,95 @@ const ChatList = () => {
   const [input, setInput] = useState("");
 
   const { currentUser } = useUserStore();
-  const { chatId, changeChat } = useChatStore();
+  const { changeChat } = useChatStore();
 
   useEffect(() => {
-    const unSub = onSnapshot(
-      doc(db, "userchats", currentUser.id),
-      async (res) => {
-        const item = res.data().chats;
+    if (!currentUser?.id) return;
 
-        const promises = item.map(async (item) => {
-          const userDocRef = doc(db, "users", item.receiverId);
-          const userDocSnap = await getDoc(userDocRef);
+    const unSub = onSnapshot(doc(db, "userchats", currentUser.id), async (res) => {
+      const chatData = res.data()?.chats || [];
 
-          const user = userDocSnap.data();
+      const promises = chatData.map(async (chat) => {
+        const userDocRef = doc(db, "users", chat.receiverId);
+        const userDocSnap = await getDoc(userDocRef);
 
-          return { ...item, user };
-        });
+        const chatDocRef = doc(db, "chats", chat.chatId);
+        const chatDocSnap = await getDoc(chatDocRef);
+        const messages = chatDocSnap.exists() ? chatDocSnap.data()?.messages || [] : [];
 
-        const chatData = await Promise.all(promises);
+        return { ...chat, user: userDocSnap.data(), lastMessage: messages.length ? messages[messages.length - 1] : null };
+      });
 
-        setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
-      }
-    );
-    
-    return () => {
-      unSub();
-    };
-  }, [currentUser.id]);
-
-  const handleSelect = async (Chat) => {
-    const userChats = chats.map((item) => {
-      const { user, ...rest } = item;     
-      return rest;
+      const updatedChats = await Promise.all(promises);
+      setChats(updatedChats.sort((a, b) => b.updatedAt - a.updatedAt));
     });
 
-    const chatIndex = userChats.findIndex(
-      (item) => item.chatId === Chat.chatId
-    );
+    return () => unSub();
+  }, [currentUser.id]);
 
-    userChats[chatIndex].isSeen = true;
+  const handleSelect = async (chat) => {
+    const userChats = chats.map(({ user, ...rest }) => rest);
+    const chatIndex = userChats.findIndex((c) => c.chatId === chat.chatId);
 
-    const userChatsRef = doc(db, "userchats", currentUser.id);
+    if (chatIndex !== -1) {
+      userChats[chatIndex].isSeen = true;
 
-    try {
-      await updateDoc(userChatsRef, {
-        chats: userChats,
-      });
-      changeChat(Chat.chatId, Chat.user);
-    } catch (err) {
-      console.log(err);
+      const userChatsRef = doc(db, "userchats", currentUser.id);
+      try {
+        await updateDoc(userChatsRef, { chats: userChats });
+        changeChat(chat.chatId, chat.user);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
   const filteredChats = chats.filter((c) =>
     c.user.username.toLowerCase().includes(input.toLowerCase())
   );
-  
+
   return (
-    <div className='chatList'>
+    <div className="chatList">
       <div className="search">
         <div className="searchBar">
-          <img src='./search.png' alt=''/>
-          <input 
-            type="text" 
-            placeholder='Search' 
-            onChange={(e) => setInput(e.target.value)}
-          />
+          <img src="./search.png" alt="Search Icon" />
+          <input type="text" placeholder="Search" onChange={(e) => setInput(e.target.value)} />
         </div>
-        <img 
+        <img
           src={addMode ? "./minus.png" : "./plus.png"}
-          alt='' 
-          className='add'
+          alt="Toggle Add User"
+          className="add"
           onClick={() => setAddMode((prev) => !prev)}
-          title={addMode ? "remove" : "add"} 
+          title={addMode ? "Remove" : "Add"}
         />
       </div>
 
-      {filteredChats.map((Chat) => (
-        <div 
-          className="item" 
-          key={Chat.chatId} 
-          onClick={() => handleSelect(Chat)}
-          style={{
-            backgroundColor: Chat?.isSeen ? "transparent" : "#5183fe",
-          }}
-        >
-          <img 
-            src={Chat.user.blocked.includes(currentUser.id) ? "./avatar.png" : Chat.user.avatar || "./avatar.png"} 
-            alt="" 
-          />
-          <div className="texts">
-            <span>{Chat.user.blocked.includes(currentUser.id) ? "user" : Chat.user.username}</span>
-            <p>{Chat.lastMessage}</p>
+      {filteredChats.map((chat) => {
+        const lastMsg = chat.lastMessage;
+        let displayMessage = "No messages yet";
+
+        if (lastMsg) {
+          displayMessage = lastMsg.text || (lastMsg.img ? "Image Sent" : "No messages yet");
+        }
+
+        return (
+          <div
+            className="item"
+            key={chat.chatId}
+            onClick={() => handleSelect(chat)}
+            style={{ backgroundColor: chat?.isSeen ? "transparent" : "#5183fe" }}
+          >
+            <img
+              src={chat.user.blocked?.includes(currentUser.id) ? "./avatar.png" : chat.user.avatar || "./avatar.png"}
+              alt="User Avatar"
+            />
+            <div className="texts">
+              <span>{chat.user.blocked?.includes(currentUser.id) ? "User" : chat.user.username}</span>
+              <p>{displayMessage}</p>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       {addMode && <AddUser />}
     </div>

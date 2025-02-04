@@ -67,15 +67,16 @@ const Detail = () => {
           {showPrivacyHelp && (
             <div className="dropdown">
               <p><strong>Privacy Policy:</strong> Your data is encrypted, and we do not share your personal information with third parties.</p>
-              <p><strong>Help Center:</strong> If you encounter issues, please contact our support team at support@example.com.</p>
+              <br></br>
+              <p><strong>Help Center:</strong> If you encounter issues, please contact our support team at support@wavetalk.com.</p>
             </div>
           )}
         </div>
 
         <div className="option">
-          <div className="title">
-            <span>Shared photos</span>
-            <img src="./arrowDown.png" alt="" title="show more"/>
+        <div className="title" onClick={() => setShowHandSignGuide(!showHandSignGuide)}>
+            <span>Shared Photos</span>
+            <img src="./arrowDown.png" alt="show more" title="show more"/>
           </div>
           <div className="photos">
             <div className="photoItem">

@@ -6,6 +6,7 @@ import { db } from "../lib/firebase";
 import { useChatStore } from "../lib/chatStore";
 import { useUserStore } from "../lib/userStore";
 import upload from "../lib/upload";
+import Tesseract from "tesseract.js";
 
 const Chat = () => {
   const [chat, setChat] = useState();
@@ -194,6 +195,41 @@ const Chat = () => {
     recognition.start();
   };
 
+const scanText = async () => {
+  if (!chat?.messages?.length && !img.url) {
+    console.log("No images found for scanning.");
+    return;
+  }
+
+  // Get the last image message
+  const lastImageMessage = chat?.messages
+    ?.filter((message) => message.img) // Only images
+    ?.pop(); // Get the last one
+
+  const imageUrl = lastImageMessage?.img || img.url;
+
+  if (!imageUrl) {
+    console.log("No valid image URL found.");
+    return;
+  }
+
+  console.log("Scanning image:", imageUrl); // Debug log
+
+  try {
+    setText("Scanning..."); // Temporary UI feedback
+
+    const { data } = await Tesseract.recognize(imageUrl, "eng");
+
+    console.log("Extracted text:", data.text); // Debugging output
+
+    setText(data.text.trim() || "No text found.");
+  } catch (error) {
+    console.error("Error scanning text:", error);
+    setText("Scan failed. Try again.");
+  }
+};
+
+
   return (
     <div className='chat'>
       <div className="top">
@@ -289,6 +325,14 @@ const Chat = () => {
       onClick={openMic} 
       title="open mic" 
     />
+
+<img 
+      src="./scan.png" 
+      alt="scan text" 
+      onClick={scanText} 
+      title="scan text" 
+    />
+
   </div>
 
   <input

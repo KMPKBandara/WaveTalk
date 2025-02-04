@@ -1,4 +1,4 @@
-import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore"; 
 import { useChatStore } from "../lib/chatStore";
 import { auth, db } from "../lib/firebase";
 import { useUserStore } from "../lib/userStore";
@@ -8,16 +8,16 @@ import "./detail.css";
 const Detail = () => {
   const { chatId, user, isCurrntUserBlocked, isReceiverBlocked, changeBlock } = useChatStore();
   const { currentUser } = useUserStore();
-  const [otherUser, setOtherUser] = useState(null);  // State to hold other user's data
+  const [otherUser, setOtherUser] = useState(null);
+  const [showPrivacyHelp, setShowPrivacyHelp] = useState(false);
 
-  // Fetch other user's details from Firestore
   useEffect(() => {
     const fetchOtherUser = async () => {
       if (!user) return;
-      const userDocRef = doc(db, "users", user.id);  // Fetch the other user's document by their ID
+      const userDocRef = doc(db, "users", user.id);
       const userSnapshot = await getDoc(userDocRef);
       if (userSnapshot.exists()) {
-        setOtherUser(userSnapshot.data());  // Set the other user's data to state
+        setOtherUser(userSnapshot.data());
       }
     };
 
@@ -39,22 +39,19 @@ const Detail = () => {
     }
   };
 
-  // If the other user's data hasn't loaded yet, show a loading message
   if (!otherUser) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className='detail'>
-      {/* Display other user's information */}
       <div className="user">
         <img src={otherUser?.avatar || "./avatar.png"} alt="Other User Avatar" />
         <h2>{otherUser?.username}</h2>
-        <p>{otherUser?.about || "No about details provided."}</p> {/* Show other user's about */}
+        <p>{otherUser?.about || "No about details provided."}</p>
       </div>
 
       <div className="info">
-        {/* Chat and privacy settings */}
         <div className="option">
           <div className="title">
             <span>Chat Settings</span>
@@ -63,13 +60,18 @@ const Detail = () => {
         </div>
 
         <div className="option">
-          <div className="title">
+          <div className="title" onClick={() => setShowPrivacyHelp(!showPrivacyHelp)}>
             <span>Privacy & Help</span>
-            <img src="./arrowDown.png" alt="" title="show more"/>
+            <img src="./arrowDown.png" alt="" title="show more" className={showPrivacyHelp ? "rotate" : ""}/>
           </div>
+          {showPrivacyHelp && (
+            <div className="dropdown">
+              <p><strong>Privacy Policy:</strong> Your data is encrypted, and we do not share your personal information with third parties.</p>
+              <p><strong>Help Center:</strong> If you encounter issues, please contact our support team at support@example.com.</p>
+            </div>
+          )}
         </div>
 
-        {/* Shared media */}
         <div className="option">
           <div className="title">
             <span>Shared photos</span>
@@ -86,13 +88,11 @@ const Detail = () => {
           </div>
         </div>
 
-        {/* Block/Unblock user functionality */}
-        <button onClick={handleBlock}>{
-          isCurrntUserBlocked ? "You are Blocked!" : isReceiverBlocked ? "Unblock User" : "Block User"
-        }</button>
+        <button onClick={handleBlock}>
+          {isCurrntUserBlocked ? "You are Blocked!" : isReceiverBlocked ? "Unblock User" : "Block User"}
+        </button>
 
-        {/* Logout button */}
-        <button className="logout" onClick={()=>auth.signOut()}>Logout</button>
+        <button className="logout" onClick={() => auth.signOut()}>Logout</button>
       </div>
     </div>
   );

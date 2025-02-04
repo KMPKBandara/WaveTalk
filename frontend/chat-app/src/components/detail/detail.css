@@ -28,6 +28,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+                cursor: pointer;
 
                 img{
                     width: 30px;
@@ -37,6 +38,24 @@
                     border-radius: 50%;
                     cursor: pointer;
                 }
+            }
+
+            .title img.rotate {
+                transform: rotate(180deg);
+            }
+
+            .dropdown {
+                margin-top: 10px;
+                background-color: rgba(255, 255, 255, 0.1);
+                padding: 10px;
+                border-radius: 5px;
+                font-size: 14px;
+                color: lightgray;
+                line-height: 1.5;
+            }
+        
+            .dropdown p {
+                margin: 5px 0;
             }
 
             .photos{

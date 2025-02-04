@@ -58,14 +58,14 @@ const Detail = () => {
         <div className="option">
           <div className="title">
             <span>Chat Settings</span>
-            <img src="./arrowDown.png" alt="" />
+            <img src="./arrowDown.png" alt="" title="show more"/>
           </div>
         </div>
 
         <div className="option">
           <div className="title">
             <span>Privacy & Help</span>
-            <img src="./arrowDown.png" alt="" />
+            <img src="./arrowDown.png" alt="" title="show more"/>
           </div>
         </div>
 
@@ -73,7 +73,7 @@ const Detail = () => {
         <div className="option">
           <div className="title">
             <span>Shared photos</span>
-            <img src="./arrowDown.png" alt="" />
+            <img src="./arrowDown.png" alt="" title="show more"/>
           </div>
           <div className="photos">
             <div className="photoItem">
@@ -81,14 +81,14 @@ const Detail = () => {
                 <img src="avatar.png" alt="" />
                 <span>photo_2024.png</span>
               </div>
-              <img src="./download.png" alt="" className="icon"/>
+              <img src="./download.png" alt="" className="icon" title="download"/>
             </div>
           </div>
         </div>
 
         {/* Block/Unblock user functionality */}
         <button onClick={handleBlock}>{
-          isCurrntUserBlocked ? "You are Blocked!" : isReceiverBlocked ? "User blocked." : "Block User"
+          isCurrntUserBlocked ? "You are Blocked!" : isReceiverBlocked ? "Unblock User" : "Block User"
         }</button>
 
         {/* Logout button */}

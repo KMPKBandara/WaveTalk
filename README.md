@@ -56,7 +56,10 @@ npm run dev
 The application should now be running at `http://localhost:3000/`.
 
 ## Screenshots
-(Include relevant screenshots of the UI and features here.)
+![Screenshot 2025-01-31 195744](https://github.com/user-attachments/assets/9dffb9ac-e52f-45db-a5bd-573a42385760)
+![Screenshot 2025-02-01 112200](https://github.com/user-attachments/assets/78c063d7-0119-475a-b642-3e845f2308b4)
+
+
 
 ## Usage
 1. Sign up or log in to WaveTalk.

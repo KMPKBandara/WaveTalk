@@ -97,7 +97,7 @@ This project is licensed under the **MIT License**.
 - Special thanks to the accessibility and AI research communities for inspiration.
 
 ## Contact
-For inquiries or support, contact: **pramudithakavinda01@gmail.com**
+For inquiries or support, contact: **kmpkbandara@std.appsc.sab.ac.lk**
 
 ---
 **WaveTalk: Empowering Communication for Everyone.** 🌍💬
